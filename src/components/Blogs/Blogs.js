@@ -1,6 +1,5 @@
 import React, { Fragment } from "react";
 import BlogComponent from "./BlogComponent";
-// import dummyBlogs from "./dummyArray";
 import { useSelector } from "react-redux";
 
 const Blogs = () => {

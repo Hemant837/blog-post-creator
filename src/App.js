@@ -35,25 +35,34 @@ function App() {
 
   // for fetch blogsData
   useEffect(() => {
-    const fetchBlogsData = async () => {
-      try {
-        const bolgsResponse = await axios.get(
-          `https://blog-post-creator-16c8c-default-rtdb.firebaseio.com/${formatEmail(
-            userEmail
-          )}/blogsData.json`
-        );
+    if (userEmail) {
+      const fetchBlogsData = async () => {
+        try {
+          const blogsResponse = await axios.get(
+            `https://blog-post-creator-16c8c-default-rtdb.firebaseio.com/${formatEmail(
+              userEmail
+            )}/blogsData.json`
+          );
 
-        const blogsData = Object.keys(bolgsResponse.data).map((key) => {
-          return { firebaseId: key, ...bolgsResponse.data[key] };
-        });
+          const blogsData = Object.keys(blogsResponse.data).map((key) => {
+            return { firebaseId: key, ...blogsResponse.data[key] };
+          });
 
-        dispatch(blogAction.replaceBlogs(blogsData));
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchBlogsData();
-  }, [userEmail]);
+          dispatch(blogAction.replaceBlogs(blogsData));
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
+      fetchBlogsData();
+
+      const intervalId = setInterval(() => {
+        fetchBlogsData();
+      }, 2000);
+
+      return () => clearInterval(intervalId);
+    }
+  });
 
   return <RouterProvider router={router} />;
 }
